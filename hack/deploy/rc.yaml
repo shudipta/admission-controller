@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: rc-apiserver
+  namespace: kube-ac
+  labels:
+    apiserver: "true"
+spec:
+  replicas: 1
+  selector:
+    apiserver: "true"
+  template:
+    metadata:
+      labels:
+        apiserver: "true"
+    spec:
+      serviceAccountName: sa-apiserver
+      containers:
+      - name: sample-extension-apiserver
+        image: shudipta/sample-extension-apiserver:v2
+        imagePullPolicy: Always
+        #, "--etcd-servers=http://localhost:2379"
+#        command: ["/sample-extension-apiserver", "run", "--etcd-servers=http://localhost:2379"]
+        command: ["/sample-extension-apiserver", "run"]
+        ports:
+        - containerPort: 8443
+#      - name: etcd
+#        image: quay.io/coreos/etcd:v3.2.16
